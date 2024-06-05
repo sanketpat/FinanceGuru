@@ -5,6 +5,9 @@ import cors from "cors"
 import helmet from "helmet"
 import morgan from "morgan"
 import dotenv from "dotenv"
+import kpiRoutes from "./routes/kpi.js"
+import KPI from "./model/KPI.js"
+import {kpis} from "./data/data.js"
 
 
 /*CONFIGURATIONS*/
@@ -18,7 +21,10 @@ app.use(morgan("common"))
 app.use(bodyParser.json)
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(cors());
-console.log("hello")
+
+
+/*ROUTES */
+app.use("/kpi", kpiRoutes);
 
 /*MONGOOSE SETUP*/
 const PORT = process.env.PORT || 9000;
@@ -26,4 +32,8 @@ mongoose.connect(process.env.MONGO_URL, {
 
 }).then(async()=>{
     app.listen(PORT, () => console.log(`Server Port:${PORT}`))
+    /* Add data one time
+    await mongoose.connection.db.dropDatabase();
+    KPI.insertMany(kpis);
+    */
 }).catch((error)=> console.log(`${error} did not connect`))
